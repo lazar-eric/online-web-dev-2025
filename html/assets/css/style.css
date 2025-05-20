@@ -1,0 +1,88 @@
+body {
+  margin: 0px;
+}
+
+h1 {
+  color: purple;
+  font-size: 12px;
+}
+
+h1 {
+  color: green;
+  font-size: 12px;
+}
+
+h1 {
+  color: blue;
+  font-size: 12px;
+}
+
+.prva {
+  color: orange;
+}
+
+.druga {
+  font-size: 50px;
+  background-color: aquamarine;
+  padding: 100px 50px 25px 5px;
+}
+
+button {
+  color: white;
+  background-color: blue;
+  border-radius: 20px;
+  border: 5px solid orange;
+}
+
+.malo-dugme {
+  padding: 5px 10px 5px 10px;
+}
+
+.veliko-dugme {
+  padding: 15px 20px 15px 20px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: antiquewhite;
+
+  padding: 0 15px 0 15px;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+}
+
+.meni {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  list-style-type: none;
+}
+
+.meni-dugme {
+  margin-left: 15px;
+}
+
+main {
+  padding: 0 40px 0 40px;
+}
+
+footer {
+  background-color: aquamarine;
+  padding: 24px 40px 24px 40px;
+}
+
+.footer-meni {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  justify-content: center;
+  gap: 15px;
+  align-items: center;
+}
