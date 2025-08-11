@@ -7,8 +7,6 @@ function App() {
     input: React.useRef()
   };
 
-  console.log('Tasks', tasks);
-
   const createTask = () => {
     const input = refs.input.current;
 
@@ -49,6 +47,20 @@ function App() {
     createTask();
   };
 
+  const onCheckboxChange = (event, index) => {
+    const inputCheckbox = event.target;
+
+    console.log('onCheckboxChange', index, inputCheckbox.checked);
+
+    setTasks(previous => {
+      previous[index].completed = inputCheckbox.checked;
+
+      return [
+        ...previous
+      ];
+    });
+  };
+
   return (
     <div>
       <h1 className="naslov">Todo app</h1>
@@ -75,7 +87,26 @@ function App() {
         </div>
 
         <ul id="taskovi" className="taskovi">
+          {tasks.map((task, index) => {
 
+            return (
+              <li
+                key={index}
+
+                className={task.completed ? "task completed" : "task"}
+              >
+                <input
+                  type="checkbox"
+
+                  onChange={event => {
+                    onCheckboxChange(event, index);
+                  }}
+                />
+
+                <p>{task.name}</p>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>
