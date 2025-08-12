@@ -130,3 +130,11 @@ main img {
   width: 30%;
   height: auto;
 }
+
+.auth {
+  background: white;
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 150px;
+}

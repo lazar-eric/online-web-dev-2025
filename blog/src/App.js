@@ -1,75 +1,49 @@
-import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import Home from './pages/Home';
-import About from './pages/About';
+import Main from './pages/Main/Main';
+import Home from './pages/Main/Home';
+import Create from './pages/Main/Create';
+
+import SignIn from './pages/Auth/SignIn';
+import SignUp from './pages/Auth/SignUp';
 
 function App() {
-  const navigate = useNavigate();
+  const [signedIn, setSignedIn] = React.useState(false);
+
+  const onSignIn = () => {
+    setSignedIn(true);
+  };
+
+  const onSignOut = () => {
+    setSignedIn(false);
+  };
 
   return (
     <div className="root">
-      <header>
-        <div className="omotac">
-          <span
-            onClick={() => {
-              navigate('/qwe');
-            }}
+      <Routes>
+        {signedIn && (
+          <Route
+            element={(
+              <Main
+                onSignOut={onSignOut}
+              />
+            )}
           >
-            <img src="https://picsum.photos/300/100" alt="logo" className="logo" />
-          </span>
+            <Route path='/' element={<Home />} />
+            <Route path='/create' element={<Create />} />
 
-          <nav>
-            <ul className="meni">
-              <li>
-                <Link to="/">
-                  Home
-                </Link>
-              </li>
+            <Route path='*' element={<Navigate to='/' />} />
+          </Route>
+        )}
 
-              <li>
-                <Link to="/about">
-                  O nama
-                </Link>
-              </li>
+        {!signedIn && <>
+          <Route path='/sign-in' element={<SignIn onSignIn={onSignIn} />} />
+          <Route path='/sign-up' element={<SignUp />} />
 
-              <li>
-                <button>
-                  Kupi me
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
-
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </main>
-
-      <footer>
-        <nav>
-          <ul className="meni">
-            <li>
-              <a href="https://myspace.com">
-                My Space
-              </a>
-            </li>
-
-            <li>
-              <a href="https://msn.com">
-                MSN
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        <p>Dragon ball Super, Akira Toriyama RIP</p>
-      </footer>
+          <Route path='*' element={<Navigate to='/sign-in' />} />
+        </>}
+      </Routes>
     </div>
   );
 }
