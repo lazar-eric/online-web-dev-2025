@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const run = async () => {
   // 1) Postavka  
   // učitaj skrivene varijable iz .env fajla 
-  dotenv.config({ quite: true });
+  dotenv.config();
 
   // config 
   const config = {
@@ -71,6 +71,7 @@ const run = async () => {
     const user = await users.insertOne({
       name,
       email,
+
       // Note: NEVER STORE RAW PASSWORD IN THE DB
       // always hash it, so 
       password: hash(password)
@@ -78,7 +79,7 @@ const run = async () => {
 
     // vrati sign in JWT string, sa kojom se korisnika smatra ulogovanim 
     return res.status(201).json({
-      jwt: jwt.sign({ id: user._id.toString() }, config.private_key)
+      jwt: jwt.sign({ id: user._id }, config.private_key)
     });
   });
 
@@ -105,7 +106,7 @@ const run = async () => {
 
     // vratiti JWT login string, kojim se user vodi kao ulogovan 
     return res.status(200).json({
-      jwt: jwt.sign({ id: user._id.toString() }, config.private_key)
+      jwt: jwt.sign({ id: user._id }, config.private_key)
     });
   });
 
@@ -180,6 +181,73 @@ const run = async () => {
     return res.status(200).json({
       response: postovi
     });
+  });
+
+  app.get('/posts/:id', protected, async (req, res) => {
+    const id = req.params.id;
+    const user = req.user;
+
+    const post = await posts.findOne({
+      _id: new ObjectId(id),
+      user: user._id
+    });
+
+    if (post) {
+      return res.status(200).json({ response: post });
+    } else {
+      return res.status(400).json({ message: 'Nemate permisije da vidite ovaj post ili post ne postoji' });
+    }
+  });
+
+  app.delete('/posts/:id', protected, async (req, res) => {
+    const id = req.params.id;
+    const user = req.user;
+
+    const deleted = await posts.findOneAndDelete({
+      _id: new ObjectId(id),
+      user: user._id
+    });
+
+    if (deleted) {
+      return res.status(200).json({ message: 'Obrisan je post' });
+    } else {
+      return res.status(400).json({ message: 'Nemate permisije da obrisete ovaj post ili post ne postoji' });
+    }
+  });
+
+  app.put('/posts/:id', protected, async (req, res) => {
+    const id = req.params.id;
+    const user = req.user;
+    const {
+      name,
+      description
+    } = req.body;
+
+    const toUpdate = {};
+
+    if (name) {
+      toUpdate.name = name;
+    }
+
+    if (description) {
+      toUpdate.description = description;
+    }
+
+    const updated = await posts.findOneAndUpdate(
+      {
+        _id: new ObjectId(id),
+        user: user._id
+      },
+      {
+        $set: toUpdate
+      }
+    );
+
+    if (updated) {
+      return res.status(200).json({ message: 'Post je ažuriran' });
+    } else {
+      return res.status(400).json({ message: 'Nemate permisije da ažurirate ovaj post ili post ne postoji' });
+    }
   });
 
   // 4) START SERVERA (API-a)

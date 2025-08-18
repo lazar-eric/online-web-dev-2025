@@ -6,9 +6,6 @@
     "start": "node ./src",
     "local": "nodemon ./src"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "@onesy/utils": "^1.0.15",
     "cors": "^2.8.5",
