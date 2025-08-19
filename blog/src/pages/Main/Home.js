@@ -8,7 +8,7 @@ const Home = () => {
   const onInit = async () => {
     const result = await API.get('/posts');
 
-    console.log(1234, result);
+    // { status: 200, response: [{}, {}] }
 
     if (result.status >= 400) {
       console.error('Error loading posts', result.message);

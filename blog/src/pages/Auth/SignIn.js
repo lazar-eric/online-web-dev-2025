@@ -31,12 +31,15 @@ const SignIn = (props) => {
 
     const result = await API.post('/sign-in', form);
 
+    // Uspeh: { status: 200, token: 'asd' }
+    // Greška: { status: 400, message: 'User email ili password su neispravni' }
+
     if (result.status >= 400) {
       setError(result.message);
     } else {
       // Save jwt in the locale storage 
-      if (result.jwt) {
-        window.localStorage.setItem('token', result.jwt);
+      if (result.token) {
+        window.localStorage.setItem('token', result.token);
       }
 
       props.onSignIn();

@@ -32,12 +32,15 @@ const SignUp = (props) => {
 
     const result = await API.post('/sign-up', form);
 
+    // Uspeh: { status: 200, token: 'asd' }
+    // Greška: { status: 400, message: 'User vec postoji sa ovim emailom' }
+
     if (result.status >= 400) {
       setError(result.message);
     } else {
       // Save jwt in the locale storage 
-      if (result.jwt) {
-        window.localStorage.setItem('token', result.jwt);
+      if (result.token) {
+        window.localStorage.setItem('token', result.token);
       }
 
       props.onSignIn();

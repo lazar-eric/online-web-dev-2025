@@ -46,6 +46,7 @@ const run = async () => {
   });
 
   // Registracija korisnika  
+  // http://localhost:4000/sign-up POST 
   app.post('/sign-up', async (req, res) => {
     const {
       name,
@@ -81,7 +82,7 @@ const run = async () => {
 
     // vrati sign in JWT string, sa kojom se korisnika smatra ulogovanim 
     return res.status(201).json({
-      jwt: jwt.sign({ id: user._id }, config.private_key)
+      token: jwt.sign({ id: user._id }, config.private_key)
     });
   });
 
@@ -108,7 +109,7 @@ const run = async () => {
 
     // vratiti JWT login string, kojim se user vodi kao ulogovan 
     return res.status(200).json({
-      jwt: jwt.sign({ id: user._id }, config.private_key)
+      token: jwt.sign({ id: user._id }, config.private_key)
     });
   });
 
@@ -129,6 +130,7 @@ const run = async () => {
     }
 
     // Proveri da li user postoji u bazi
+    // { id: user._id }
     const id = data.id;
 
     const user = await users.findOne({
@@ -154,7 +156,7 @@ const run = async () => {
 
     const user = req.user;
 
-    const post = await posts.insertOne({
+    await posts.insertOne({
       name,
       description,
 
@@ -165,10 +167,7 @@ const run = async () => {
     });
 
     return res.status(201).json({
-      message: 'Post kreiran',
-      response: {
-        id: post._id
-      }
+      message: 'Post kreiran'
     });
   });
 
