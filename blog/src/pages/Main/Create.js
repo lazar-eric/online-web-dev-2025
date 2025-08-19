@@ -1,10 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { API } from '../../utils';
 
 const Create = () => {
+  const navigate = useNavigate();
   const [form, setForm] = React.useState({
-    title: '',
-    text: ''
+    name: '',
+    description: ''
   });
+  const [error, setError] = React.useState('');
 
   const onChange = (event, type) => {
     const input = event.target;
@@ -19,33 +24,44 @@ const Create = () => {
     });
   };
 
-  const onCreate = () => {
-    console.log(form);
+  const onCreate = async () => {
+    // očistimo grešku prethodnog zahteva 
+    setError('');
+
+    const result = await API.post('/posts', form);
+
+    if (result.status >= 400) {
+      setError(result.message);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
     <div>
       <h1>Create</h1>
 
-      <div>
-        <input
-          placeholder='Title'
+      {error && (
+        <p className='error'>{error}</p>
+      )}
 
-          onChange={event => {
-            onChange(event, 'title');
-          }}
-        />
-      </div>
+      <input
+        placeholder='Name'
 
-      <div>
-        <textarea
-          placeholder='Text'
+        onChange={event => {
+          onChange(event, 'name');
+        }}
+      />
 
-          onChange={event => {
-            onChange(event, 'text');
-          }}
-        />
-      </div>
+      <textarea
+        placeholder='Description'
+
+        onChange={event => {
+          onChange(event, 'description');
+        }}
+
+        rows={15}
+      />
 
       <button
         onClick={onCreate}

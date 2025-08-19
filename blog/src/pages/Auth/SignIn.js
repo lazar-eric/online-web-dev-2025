@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { API } from '../../utils';
+
 const SignIn = (props) => {
   const navigate = useNavigate();
 
@@ -8,6 +10,7 @@ const SignIn = (props) => {
     email: '',
     password: ''
   });
+  const [error, setError] = React.useState('');
 
   const onChange = (event, type) => {
     const input = event.target;
@@ -22,12 +25,22 @@ const SignIn = (props) => {
     });
   };
 
-  const onSignIn = () => {
-    console.log(form);
+  const onSignIn = async () => {
+    // očistimo grešku prethodnog zahteva 
+    setError('');
 
-    // api 
+    const result = await API.post('/sign-in', form);
 
-    props.onSignIn();
+    if (result.status >= 400) {
+      setError(result.message);
+    } else {
+      // Save jwt in the locale storage 
+      if (result.jwt) {
+        window.localStorage.setItem('token', result.jwt);
+      }
+
+      props.onSignIn();
+    }
   };
 
   return (
@@ -35,6 +48,10 @@ const SignIn = (props) => {
       className='auth'
     >
       <h1>Sign in</h1>
+
+      {error && (
+        <p className='error'>{error}</p>
+      )}
 
       <input
         type='email'

@@ -9,7 +9,7 @@ import SignIn from './pages/Auth/SignIn';
 import SignUp from './pages/Auth/SignUp';
 
 function App() {
-  const [signedIn, setSignedIn] = React.useState(false);
+  const [signedIn, setSignedIn] = React.useState(window.localStorage.getItem('token'));
 
   const onSignIn = () => {
     setSignedIn(true);
@@ -17,6 +17,8 @@ function App() {
 
   const onSignOut = () => {
     setSignedIn(false);
+
+    window.localStorage.removeItem('token');
   };
 
   return (
@@ -39,7 +41,7 @@ function App() {
 
         {!signedIn && <>
           <Route path='/sign-in' element={<SignIn onSignIn={onSignIn} />} />
-          <Route path='/sign-up' element={<SignUp />} />
+          <Route path='/sign-up' element={<SignUp onSignIn={onSignIn} />} />
 
           <Route path='*' element={<Navigate to='/sign-in' />} />
         </>}

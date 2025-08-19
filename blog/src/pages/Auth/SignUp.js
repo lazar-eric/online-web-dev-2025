@@ -1,7 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SignIn = () => {
+import { API } from '../../utils';
+
+const SignUp = (props) => {
   const navigate = useNavigate();
 
   const [form, setForm] = React.useState({
@@ -9,6 +11,7 @@ const SignIn = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = React.useState('');
 
   const onChange = (event, type) => {
     const input = event.target;
@@ -23,11 +26,22 @@ const SignIn = () => {
     });
   };
 
-  const onSignUp = () => {
-    console.log(form);
-    // api 
+  const onSignUp = async () => {
+    // očistimo grešku prethodnog zahteva 
+    setError('');
 
-    navigate('/sign-in');
+    const result = await API.post('/sign-up', form);
+
+    if (result.status >= 400) {
+      setError(result.message);
+    } else {
+      // Save jwt in the locale storage 
+      if (result.jwt) {
+        window.localStorage.setItem('token', result.jwt);
+      }
+
+      props.onSignIn();
+    }
   };
 
   return (
@@ -35,6 +49,10 @@ const SignIn = () => {
       className='auth'
     >
       <h1>Sign up</h1>
+
+      {error && (
+        <p className='error'>{error}</p>
+      )}
 
       <input
         placeholder='Full name'
@@ -85,5 +103,5 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
 

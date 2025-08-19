@@ -25,6 +25,8 @@ const run = async () => {
 
   app.use(express.json());
 
+  app.use(express.urlencoded({ extended: true }));
+
   // 2) MONGODB KONEKCIJA 
   const client = new MongoClient(config.mongo_uri);
 
@@ -111,7 +113,7 @@ const run = async () => {
   });
 
   // Middleware 
-  const protected = async (req, res) => {
+  const protected = async (req, res, next) => {
     // Izvuci user-a is request-a
     const jwtString = req.headers.authorization;
 
